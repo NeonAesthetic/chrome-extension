@@ -8,9 +8,17 @@ chrome.browserAction.onClicked.addListener(function(activeTab){
 
 chrome.runtime.onMessageExternal.addListener(
     function(request, sender, sendResponse) {
-        chrome.desktopCapture.chooseDesktopMedia(["screen"], sender.tab, function(id){
-            sendResponse({media_id:id});
-        });
+        if(request) {
+            if (request.message) {
+                if(request.message == "version") {
+                    sendResponse({version: '1.0'});
+                    return true;
+                }
+            }
+            chrome.desktopCapture.chooseDesktopMedia(["screen"], sender.tab, function (id) {
+                sendResponse({media_id: id});
+            });
+        }
         return true;
     }
 );
